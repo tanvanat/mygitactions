@@ -20,6 +20,10 @@ jobs:
       - name: Set KUBECONFIG env
         run: echo "KUBECONFIG=$PWD/kubeconfig.yaml" >> $GITHUB_ENV
 
+      - name: Test Kubeconfig Connection
+        run: |
+          kubectl get nodes
+
       - name: Helm Upgrade OneUptime
         run: |
           helm repo add oneuptime https://helm-chart.oneuptime.com
