@@ -1,0 +1,30 @@
+# .github/workflows/upgrade-oneuptime.yaml
+name: Auto Upgrade OneUptime
+
+on:
+  schedule:
+    - cron: '0 3 * * 1' # ทุกวันจันทร์ เวลา 03:00 UTC
+  workflow_dispatch: # manual run ได้ด้วย
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > kubeconfig.yaml
+        env:
+          KUBECONFIG_BASE64: ${{ secrets.KUBECONFIG_BASE64 }}
+
+      - name: Helm Upgrade OneUptime
+        run: |
+          helm repo add oneuptime https://helm.oneuptime.com
+          helm repo update
+          helm upgrade --install oneuptime oneuptime/oneuptime \
+            -n oneuptime \
+            --kubeconfig kubeconfig.yaml \
+            -f helm-values/production-values.yaml
