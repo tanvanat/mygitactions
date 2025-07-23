@@ -22,7 +22,7 @@ jobs:
 
       - name: Helm Upgrade OneUptime
         run: |
-          helm repo add oneuptime https://helm.oneuptime.com
+          helm repo add oneuptime https://helm-chart.oneuptime.com
           helm repo update
           helm upgrade --install oneuptime oneuptime/oneuptime \
             -n oneuptime \
